@@ -1,30 +1,43 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pipes
 {
     public class ProcessBuilder
     {
+        private List<Action> PipeExecutionCallbacks; 
+
         private ProcessBuilder()
         {
+            PipeExecutionCallbacks = new List<Action>();
         }
 
-        public static ProcessBuilder Wireup()
+        public static ProcessBuilder Create()
         {
             return new ProcessBuilder();
         }
 
-        public PipeBuilder<P, I, O> Pipe<P, I, O>() where P : IPipe<I, O>, new()
+        public PipeBuilder<P, I, O> Pipe<P, I, O>()
+            where P : IPipe<I, O>, new()
+            where O : class
+            where I : class
         {
             return new PipeBuilder<P, I, O>(this);
         }
 
-        public void Go()
+        public IEnumerable<Task> Build()
         {
+            var taskFactory = new TaskFactory();
 
+            return PipeExecutionCallbacks.Select(taskFactory.StartNew);
         }
 
-
-        public class PipeBuilder<P, I, O> where P : IPipe<I, O>, new()
+        public class PipeBuilder<P, I, O> 
+            where P : IPipe<I, O>, new()
+            where I: class
+            where O: class
         {
             private readonly ProcessBuilder _processBuilder;
             private P _instance;
@@ -47,9 +60,13 @@ namespace Pipes
                 return this;
             }
 
-            public ProcessBuilder FinishPipe
+            public ProcessBuilder Wire
             {
-                get { return _processBuilder; }
+                get
+                {
+                    _processBuilder.PipeExecutionCallbacks.Add(() => _instance.Execute());
+                    return _processBuilder;
+                }
             }
         }
     }

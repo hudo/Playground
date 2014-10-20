@@ -1,4 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Pipes
 {
@@ -6,21 +8,22 @@ namespace Pipes
     {
         public void WireupTest()
         {
-            var context = new Context();
+            var buffers = new Buffers();
 
-            ProcessBuilder.Wireup()
-                .Pipe<BeginPipe, NullStream, BlockingCollection<string>>()
-                    .Output(() => context.First)
-                    .FinishPipe
+            var tasks = ProcessBuilder.Create()
+                .Pipe<BeginPipe, Nothing, BlockingCollection<string>>()
+                    .Output(() => buffers.First)
+                    .Wire
                 .Pipe<ProcessPipe, BlockingCollection<string>, BlockingCollection<string>>()
-                    .Input(() => context.First)
-                    .Output(() => context.Second)
-                    .FinishPipe
-                .Pipe<SavePipe, BlockingCollection<string>, NullStream>()
-                    .Input(() => context.Second)
-                    .FinishPipe
-                .Go();
+                    .Input(() => buffers.First)
+                    .Output(() => buffers.Second)
+                    .Wire
+                .Pipe<SavePipe, BlockingCollection<string>, Nothing>()
+                    .Input(() => buffers.Second)
+                    .Wire
+                .Build();
 
+            Task.WaitAll(tasks.ToArray());
         }
     }
 }

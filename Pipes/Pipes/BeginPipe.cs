@@ -2,9 +2,9 @@
 
 namespace Pipes
 {
-    public class BeginPipe : IPipe<NullStream, BlockingCollection<string>>
+    public class BeginPipe : IPipe<Nothing, BlockingCollection<string>>
     {
-        public NullStream Input { set; private get; }
+        public Nothing Input { set; private get; }
         public BlockingCollection<string> Output { set; private get; }
         public void Execute()
         {

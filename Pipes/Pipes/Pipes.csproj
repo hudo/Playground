@@ -41,9 +41,9 @@
   <ItemGroup>
     <Compile Include="BeginPipe.cs" />
     <Compile Include="PipesTests.cs" />
-    <Compile Include="Context.cs" />
+    <Compile Include="Buffers.cs" />
     <Compile Include="IPipe.cs" />
-    <Compile Include="NullStream.cs" />
+    <Compile Include="Nothing.cs" />
     <Compile Include="ProcessBuilder.cs" />
     <Compile Include="ProcessPipe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

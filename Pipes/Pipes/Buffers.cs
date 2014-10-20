@@ -2,7 +2,7 @@
 
 namespace Pipes
 {
-    public class Context
+    public class Buffers
     {
         public BlockingCollection<string> First { get; set; }
         public BlockingCollection<string> Second { get; set; }
