@@ -32,4 +32,10 @@ namespace Scraper
             chromeDriver.Dispose();
         }
     }
+
+    public interface IPipe
+    {
+        IPipe Next { get; }
+    }
+
 }
