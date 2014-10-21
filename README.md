@@ -11,7 +11,10 @@ Wanted to see how selenium webdrived is working, what's good for and diff betwee
 Simple implementation for [pipelined processing](http://msdn.microsoft.com/en-us/library/ff963548.aspx) of data. 
 Similar solution used in one web scraper project: scrape links from one page, visit them, 
 find additional links on those pages, then scrape some data (with HtmlAgilityPack) and save it to db. 
-Configuration of that process can be nicely modeled with this pipeline solution.  
+Configuration of that process can be nicely modeled with this pipeline solution.      
+
+Recommended usage of [BlockingCollection'T](http://msdn.microsoft.com/en-us/library/dd997371.aspx)
+for concurrent queueing buffers. 
 
 Example:
 
