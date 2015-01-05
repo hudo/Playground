@@ -11,7 +11,7 @@ namespace EFone2one
             Database.SetInitializer(new DropCreateDatabaseAlways<PeopleContext>());
             
             var context = new PeopleContext();
-            context.Database.Log = Console.WriteLine;
+            context.Database.Log = Console.WriteLine; // so we can inspect SQL statements
 
             AddOnePerson(context);
 
@@ -24,6 +24,10 @@ namespace EFone2one
 
         private static void AddOnePerson(PeopleContext context)
         {
+            // We need to create new Person without AddressId, save that to db to get its Id
+            // and then create Address and fill both ends of relationship (PersonId and AddressId)
+            // That's why Person.AddressId is nullable.
+
             var john = new Person {Name = "john"};
             context.Persons.Add(john);
             context.SaveChanges();
@@ -58,13 +62,15 @@ namespace EFone2one
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            // one to many Person - Address
             modelBuilder.Entity<Person>()
                 .HasOptional(x => x.Address).WithMany()
                 .HasForeignKey(x => x.AddressId);
 
+            // one to many Address - Person
             modelBuilder.Entity<Address>()
                 .HasRequired(x => x.Person).WithMany()
-                .HasForeignKey(x => x.PersonId).WillCascadeOnDelete(false);
+                .HasForeignKey(x => x.PersonId);
         }
     }
 }
