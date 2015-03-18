@@ -12,6 +12,7 @@ namespace SimpleThrottler
 
         public override async Task Invoke(IOwinContext context)
         {
+            
             await Next.Invoke(context);
         }
     }

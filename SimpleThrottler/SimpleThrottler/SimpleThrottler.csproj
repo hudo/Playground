@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Engine\IRequestStore.cs" />
+    <Compile Include="Engine\LimiterSettings.cs" />
     <Compile Include="Engine\RequestLimiter.cs" />
     <Compile Include="Storage\InMemoryRequestStore.cs" />
     <Compile Include="ThrottlingMiddleware.cs" />
