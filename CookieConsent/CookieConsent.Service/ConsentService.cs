@@ -5,35 +5,33 @@
         private const string COOKIE_KEY = "CookieConsent";
 
         private readonly ICookieStorage _storage;
-        private readonly IAssetsResource _assetsResource;
-        private readonly ConsentSettings _settings;
+        private readonly IAssetsProvider _assetsProvider;
 
         private string _cachedConsentHtml = "";
 
-        public ConsentService(ICookieStorage storage, IAssetsResource assetsResource,ConsentSettings settings)
+        public ConsentService(ICookieStorage storage, IAssetsProvider assetsProvider)
         {
             _storage = storage;
-            _assetsResource = assetsResource;
-            _settings = settings;
+            _assetsProvider = assetsProvider;
         }
 
-        public string RenderNotificationHtml()
+        public string RenderNotificationHtml(ConsentSettings settings, string culture)
         {
             var cookieContent = _storage.Read(COOKIE_KEY);
 
             if (string.IsNullOrEmpty(cookieContent))
             {
-                return GenerateConsentHtml();
+                return GenerateConsentHtml(settings, culture);
             }
             return string.Empty;
         }
 
-        private string GenerateConsentHtml()
+        private string GenerateConsentHtml(ConsentSettings settings, string culture)
         {
             if (string.IsNullOrEmpty(_cachedConsentHtml))
             {
-                var template = _assetsResource.HtmlTemplate;
-                foreach (var mapping in _settings.GetMappings())
+                var template = _assetsProvider.GetHtml(culture);
+                foreach (var mapping in settings.GetMappings())
                 {
                     template = template.Replace(string.Format("{{{0}}}", mapping.Key), mapping.Value);
                 }

@@ -1,8 +1,8 @@
 ﻿namespace CookieConsent.Service
 {
-    public interface IAssetsResource
+    public interface IAssetsProvider
     {
-        string HtmlTemplate { get; }
+        string GetHtml(string culture);
         string Javascript { get; }
     }
 }

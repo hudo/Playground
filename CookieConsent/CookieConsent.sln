@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieConsent.Aspnet", "Coo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieConsent.OWIN", "CookieConsent.OWIN\CookieConsent.OWIN.csproj", "{8040A62D-08E6-4FF1-9F68-54725014E104}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieConsent.Example.MVC", "CookieConsent.Example.MVC\CookieConsent.Example.MVC.csproj", "{242FDC67-EC42-4876-8F3D-064FF26F6A0C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{8040A62D-08E6-4FF1-9F68-54725014E104}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8040A62D-08E6-4FF1-9F68-54725014E104}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8040A62D-08E6-4FF1-9F68-54725014E104}.Release|Any CPU.Build.0 = Release|Any CPU
+		{242FDC67-EC42-4876-8F3D-064FF26F6A0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{242FDC67-EC42-4876-8F3D-064FF26F6A0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{242FDC67-EC42-4876-8F3D-064FF26F6A0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{242FDC67-EC42-4876-8F3D-064FF26F6A0C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
