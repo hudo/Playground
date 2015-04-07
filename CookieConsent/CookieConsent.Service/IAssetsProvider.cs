@@ -2,7 +2,7 @@
 {
     public interface IAssetsProvider
     {
-        string GetHtml(string culture);
+        string HtmlElement { get; }
         string Javascript { get; }
     }
 }

@@ -1,4 +1,7 @@
-﻿namespace CookieConsent.Service
+﻿using System;
+using System.Collections.Concurrent;
+
+namespace CookieConsent.Service
 {
     public class ConsentService
     {
@@ -7,7 +10,7 @@
         private readonly ICookieStorage _storage;
         private readonly IAssetsProvider _assetsProvider;
 
-        private string _cachedConsentHtml = "";
+        private static readonly ConcurrentDictionary<string, string> CachedConsentHtml = new ConcurrentDictionary<string, string>();
 
         public ConsentService(ICookieStorage storage, IAssetsProvider assetsProvider)
         {
@@ -19,26 +22,23 @@
         {
             var cookieContent = _storage.Read(COOKIE_KEY);
 
-            if (string.IsNullOrEmpty(cookieContent))
-            {
-                return GenerateConsentHtml(settings, culture);
-            }
-            return string.Empty;
+            return string.IsNullOrEmpty(cookieContent) ? GenerateConsentHtml(settings, culture) : string.Empty;
         }
 
         private string GenerateConsentHtml(ConsentSettings settings, string culture)
         {
-            if (string.IsNullOrEmpty(_cachedConsentHtml))
+            return CachedConsentHtml.GetOrAdd(culture, x =>
             {
-                var template = _assetsProvider.GetHtml(culture);
-                foreach (var mapping in settings.GetMappings())
-                {
-                    template = template.Replace(string.Format("{{{0}}}", mapping.Key), mapping.Value);
-                }
-                _cachedConsentHtml = template;
-            }
+                var template = _assetsProvider.HtmlElement;
+                var mappings = settings.GetMappings(culture) ?? settings.GetMappings(settings.FallbackCulture);
 
-            return _cachedConsentHtml;
+                if(mappings == null) throw new Exception("Can't find culture and fallback culture");
+
+                foreach (var mapping in mappings)
+                    template = template.Replace(string.Format("{{{0}}}", mapping.Key), mapping.Value);
+                
+                return template;
+            });
         }
     }
 }

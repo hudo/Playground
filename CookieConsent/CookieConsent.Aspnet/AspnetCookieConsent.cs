@@ -27,8 +27,7 @@ namespace CookieConsent.Aspnet
                         {
                             ConsentService = new ConsentService(
                                 new HttpContextCookieStorage(), 
-                                new FileAssetsProvider(Settings.LocalizedHtmlTemplateLocations, Settings.JsFileLocation, Settings.FallbackCulture, new FileShim())
-                            )
+                                new CachedAssetsProvider(new FileShim(), Settings))
                         };
                     }
                 }
@@ -36,17 +35,17 @@ namespace CookieConsent.Aspnet
             }
         }
 
-        public static void SetDefaults(IAssetsProvider assetsProvider, ICookieStorage cookieStorage)
+        public static void SetDefaults(IAssetsProvider assetsProvider = null, ICookieStorage cookieStorage = null)
         {
             lock (Sync)
             {
-                _instance = new AspnetCookieConsent {ConsentService = new ConsentService(cookieStorage, assetsProvider)};
+                _instance = new AspnetCookieConsent
+                {
+                    ConsentService = new ConsentService(
+                        cookieStorage ?? new HttpContextCookieStorage(), 
+                        assetsProvider ?? new CachedAssetsProvider(new FileShim(), Settings))
+                };
             }
-        }
-
-        public static void SetDefaults(IAssetsProvider assetsProvider)
-        {
-            SetDefaults(assetsProvider, new HttpContextCookieStorage());
         }
       
         public string RenderConsent()
