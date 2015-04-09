@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Web;
 using CookieConsent.Service;
 
 namespace CookieConsent.Aspnet
@@ -11,7 +12,12 @@ namespace CookieConsent.Aspnet
         [SuppressMessage("ReSharper", "InconsistentNaming")] 
         private ConsentService ConsentService;
 
-        public static ConsentSettings Settings = new ConsentSettings();
+        public static ConsentSettings Settings { get; set; }
+
+        static AspnetCookieConsent()
+        {
+            Settings = new ConsentSettings();
+        }
 
         private AspnetCookieConsent() { }
 
@@ -23,11 +29,12 @@ namespace CookieConsent.Aspnet
                 {
                     lock (Sync)
                     {
+                        var wwwroot = HttpContext.Current.Server.MapPath("\\");
                         _instance = new AspnetCookieConsent
                         {
                             ConsentService = new ConsentService(
                                 new HttpContextCookieStorage(), 
-                                new CachedAssetsProvider(new FileShim(), Settings))
+                                new CachedAssetsProvider(new FileShim(wwwroot), Settings))
                         };
                     }
                 }
@@ -39,11 +46,12 @@ namespace CookieConsent.Aspnet
         {
             lock (Sync)
             {
+                var wwwroot = HttpContext.Current.Server.MapPath("\\");
                 _instance = new AspnetCookieConsent
                 {
                     ConsentService = new ConsentService(
                         cookieStorage ?? new HttpContextCookieStorage(), 
-                        assetsProvider ?? new CachedAssetsProvider(new FileShim(), Settings))
+                        assetsProvider ?? new CachedAssetsProvider(new FileShim(wwwroot), Settings))
                 };
             }
         }

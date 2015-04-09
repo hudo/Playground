@@ -18,6 +18,11 @@ namespace CookieConsent.Service
                 Settings = new ConsentSettings();
             }
 
+            public ConsentSettings GetSettings()
+            {
+                return Settings;
+            }
+
             public SettingsWireup WithLocalizedContent(string culture, string title, string description, string learnMoreTitle, string closeTitle, string learnMoreUrl = null)
             {
                 Settings.LocalizedContentSettings.Add(culture,

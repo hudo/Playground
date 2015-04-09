@@ -23,6 +23,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieConsent.Example.MVC",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CookieConsent.OWIN.Microsoft", "CookieConsent.OWIN.Microsoft\CookieConsent.OWIN.Microsoft.csproj", "{449277DC-D254-427F-A5EE-DF01CE7F05D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Assets", "Assets", "{1F1F2A3F-A144-437A-A16E-FA2EA3813C6D}"
+	ProjectSection(SolutionItems) = preProject
+		Assets\CookieConsent.html = Assets\CookieConsent.html
+		Assets\CookieConsent.js = Assets\CookieConsent.js
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

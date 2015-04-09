@@ -19,7 +19,7 @@ namespace CookieConsent.Service
             };
         }
 
-        public string JsFileLocation = "/Assets/CookieConsent.js";
+        public string JsFileLocation = "/Scripts/CookieConsent.js";
         public string HtmlFileLocation = "/Assets/CookieConsent.html";
 
         public Dictionary<string, LocalizedContent> LocalizedContentSettings;

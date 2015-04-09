@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <metadata>
+        <id>CookieConsent.Aspnet</id>
+        <version>0.1.0</version>
+        <title>CookieConsent.Aspnet</title>
+        <authors>Hrvoje Hudo</authors>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>Cookie Consent warning, hosted in ASP.NET application (MVC or WebForms)</description>
+        <dependencies>
+            <dependency id="jquery.cookie" version="1.4.0" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\Assets\CookieConsent.html" target="content\Assets\CookieConsent.html" />
+        <file src="..\Assets\CookieConsent.js" target="content\Scripts\CookieConsent.js" />
+        <file src="..\CookieConsent.Aspnet\bin\Release\CookieConsent.Aspnet.dll" target="lib\net451\CookieConsent.Aspnet.dll" />
+        <file src="..\CookieConsent.Service\bin\Release\CookieConsent.Service.dll" target="lib\net451\CookieConsent.Service.dll" />
+    </files>
+</package>
