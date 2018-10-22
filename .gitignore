@@ -11,10 +11,12 @@
 [Dd]ebugPublic/
 [Rr]elease/
 [Rr]eleases/
+
 x64/
 x86/
 build/
 bld/
+.idea/
 [Bb]in/
 [Oo]bj/
 
