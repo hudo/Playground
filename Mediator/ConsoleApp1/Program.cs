@@ -54,7 +54,7 @@ namespace ConsoleApp1
         Task<TResp> Handle(TReq request, HandlerDelegate<TResp> next);
     }
     
-    // test implementations
+    // sample implementations
     
     public class Response { }
 
