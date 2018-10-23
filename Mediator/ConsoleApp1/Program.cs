@@ -19,7 +19,9 @@ namespace ConsoleApp1
             // scan for implementations with Scrutor
             services.Scan(scan => scan.FromCallingAssembly()
                 .AddClasses(cls => cls.AssignableTo(typeof(ICommandHandler<,>))).AsImplementedInterfaces()
-                .AddClasses(cls => cls.AssignableTo(typeof(IPipeline<,>))).AsImplementedInterfaces());
+                .AddClasses(cls => cls.AssignableTo(typeof(IPipeline<,>))).AsImplementedInterfaces()
+                .AddClasses(cls => cls.AssignableTo(typeof(IPrePipelineStep<>))).AsImplementedInterfaces()
+                .AddClasses(cls => cls.AssignableTo(typeof(IPostPipelineStep<,>))).AsImplementedInterfaces());
 
             var provider = services.BuildServiceProvider();
             var factory = provider.GetService<ServiceFactory>();
@@ -41,6 +43,7 @@ namespace ConsoleApp1
 
             return factory
                 .GetInstances<IPipeline<TReq, TResp>>()
+                .Reverse()
                 .Aggregate(handlerDelegate, (next, pipeline) => () => pipeline.Handle(request, next))();
                 // creates a chain of delegates, each one with reference to next delegate (in Handle(..., next)). 
                 // we just need to invoke the first one and the whole chain will execute one by one.
@@ -59,11 +62,67 @@ namespace ConsoleApp1
         Task<TResp> Handle(TReq request);
     }
 
+    // pipeline
+
     public interface IPipeline<in TReq, TResp>
     {
         Task<TResp> Handle(TReq request, HandlerDelegate<TResp> next);
     }
-    
+
+    public interface IPrePipelineStep<in TReq>
+    {
+        Task Process(TReq request);
+    }
+
+    public interface IPostPipelineStep<in TReq, in TResp>
+    {
+        Task Process(TReq request, TResp response);
+    }
+
+    // internal implementation for pre/post steps
+
+    public class PreHandlerStep<TReq, TResp> : IPipeline<TReq, TResp>
+    {
+        private readonly IEnumerable<IPrePipelineStep<TReq>> _steps;
+
+        public PreHandlerStep(IEnumerable<IPrePipelineStep<TReq>> steps)
+        {
+            _steps = steps;
+        }
+
+        public async Task<TResp> Handle(TReq request, HandlerDelegate<TResp> next)
+        {
+            foreach (var step in _steps)
+            {
+                await step.Process(request);
+            }
+
+            return await next();
+        }
+    }
+
+    public class PostHandlerStep<TReq, TResp> : IPipeline<TReq, TResp>
+    {
+        private readonly IEnumerable<IPostPipelineStep<TReq, TResp>> _steps;
+
+        public PostHandlerStep(IEnumerable<IPostPipelineStep<TReq, TResp>> steps)
+        {
+            _steps = steps;
+        }
+
+        public async Task<TResp> Handle(TReq request, HandlerDelegate<TResp> next)
+        {
+            var response = await next();
+
+            foreach (var step in _steps)
+            {
+                await step.Process(request, response);
+            }
+
+            return response;
+        }
+    }
+
     // sample implementations
     
     public class Response { }
@@ -85,6 +144,24 @@ namespace ConsoleApp1
         {
             Console.WriteLine("Pipeline step Invoked");
             return await next();
+        }
+    }
+
+    public class TestPreStep : IPrePipelineStep<TestCommand>
+    {
+        public Task Process(TestCommand request)
+        {
+            Console.WriteLine("Pre test step");
+            return Task.CompletedTask;
+        }
+    }
+
+    public class TestPostStep : IPostPipelineStep<TestCommand, Response>
+    {
+        public Task Process(TestCommand request, Response response)
+        {
+            Console.WriteLine("Post test step");
+            return Task.CompletedTask;
         }
     }
 
